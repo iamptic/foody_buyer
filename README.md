@@ -1,1 +1,1 @@
-Buyer app with QR code on reservation confirmation. Use ?api=<backend_url>.
+Foody Buyer App — статичный фронтенд для покупателей с возможностью бронировать блюда.
