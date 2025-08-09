@@ -1,1 +1,1 @@
-Foody Buyer App — статичный фронтенд для покупателей с возможностью бронировать блюда.
+Buyer app with QR code on reservation confirmation. Use ?api=<backend_url>.
