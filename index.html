@@ -1,1 +1,52 @@
-<!doctype html><html><body>buyer placeholder</body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foody — Предложения рядом</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="light">
+  <header class="topbar">
+    <div class="brand"><div class="logo">🥡</div><div class="title"><div class="name">Foody</div><div class="subtitle">Горячие предложения рядом</div></div></div>
+    <div class="top-actions">
+      <input id="search" class="input" placeholder="Поиск: бургер, суп..." />
+      <select id="sort" class="input">
+        <option value="new">Сначала новые</option>
+        <option value="price">Дешевле</option>
+        <option value="time">Скоро истекают</option>
+      </select>
+      <button id="refreshBtn" class="btn ghost">Обновить</button>
+    </div>
+  </header>
+  <main class="container">
+    <section class="card">
+      <div id="offers" class="cards-grid"></div>
+      <div id="empty" class="empty hidden"><div class="empty-emoji">🔍</div><div class="empty-title">Пока нет предложений</div><div class="empty-sub">Попробуйте обновить позже или измените поиск.</div></div>
+    </section>
+  </main>
+
+  <dialog id="reserveModal" class="modal">
+    <form method="dialog" class="modal-card" id="reserveForm">
+      <h3>Бронь предложения</h3>
+      <div id="reserveOffer" class="muted small"></div>
+      <div class="field"><label>Ваше имя (необязательно)</label><input id="buyerName" /></div>
+      <div class="actions end"><button class="btn ghost" value="cancel">Отмена</button><button class="btn primary" id="reserveSubmit" value="default">Забронировать</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="okModal" class="modal">
+    <div class="modal-card">
+      <h3>Бронь оформлена ✅</h3>
+      <p class="muted small">Покажите этот код на кассе. Действует ограниченное время.</p>
+      <div id="reserveCode" class="bigcode">— — — — — —</div>
+      <div id="reserveUntil" class="muted small"></div>
+      <div class="actions end"><button class="btn primary" id="okClose">Ок</button></div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="./buyer.js"></script>
+</body>
+</html>
