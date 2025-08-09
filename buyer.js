@@ -1,5 +1,4 @@
 (() => {
-  const tg = window.Telegram?.WebApp; try { tg?.expand?.(); } catch(_) {}
   const urlp = new URLSearchParams(location.search);
   const API = urlp.get('api') || 'http://localhost:8000';
 
