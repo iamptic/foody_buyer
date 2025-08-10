@@ -1,1 +1,59 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Foody — Предложения рядом</title><link rel="stylesheet" href="./styles.css"/><script>if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();try{Telegram.WebApp.expand()}catch(e){}}</script></head><body class="light"><header class="topbar"><div class="brand"><div class="logo">🥡</div><div class="title"><div class="name">Foody</div><div class="subtitle">Горячие предложения рядом</div></div></div><div class="top-actions"><input id="search" class="input" placeholder="Поиск: бургер, суп..."/><select id="sort" class="input"><option value="new">Сначала новые</option><option value="price">Дешевле</option><option value="time">Скоро истекают</option></select><button id="refreshBtn" class="btn ghost">Обновить</button></div></header><main class="container"><section class="card"><div id="offers" class="cards-grid"></div><div id="empty" class="empty hidden"><div class="empty-emoji">🔍</div><div class="empty-title">Пока нет предложений</div><div class="empty-sub">Попробуйте обновить позже или измените поиск.</div></div></section></main><dialog id="reserveModal" class="modal"><form method="dialog" class="modal-card" id="reserveForm"><h3>Бронь предложения</h3><div id="reserveOffer" class="muted small"></div><div class="field"><label>Ваше имя (необязательно)</label><input id="buyerName"/></div><div class="actions end"><button class="btn ghost" value="cancel">Отмена</button><button class="btn primary" id="reserveSubmit" value="default">Забронировать</button></div></form></dialog><dialog id="okModal" class="modal"><div class="modal-card"><h3>Бронь оформлена ✅</h3><p class="muted small">Покажите этот код на кассе. Действует ограниченное время.</p><div id="reserveCode" class="bigcode">— — — — — —</div><div id="reserveUntil" class="muted small"></div><div class="actions end"><button class="btn primary" id="okClose">Ок</button></div></div></dialog><div id="toast" class="toast hidden"></div><script src="./buyer.js"></script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Foody — Предложения рядом</title>
+  <link rel="stylesheet" href="./styles.css"/>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>document.addEventListener('DOMContentLoaded',()=>{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();try{Telegram.WebApp.expand()}catch(e){}}});</script>
+</head>
+<body class="light">
+  <header class="topbar">
+    <div class="brand"><div class="logo">🥡</div><div class="title"><div class="name">Foody</div><div class="subtitle">Горячие предложения рядом</div></div></div>
+    <div class="top-actions"><button id="refreshBtn" class="btn ghost">Обновить</button></div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="filters wrap">
+        <input id="search" class="input" placeholder="Поиск: блюдо или ресторан"/>
+        <select id="category"><option value="">Категория — все</option></select>
+        <input id="minPrice" class="input" type="number" min="0" step="1" placeholder="Цена от"/>
+        <input id="maxPrice" class="input" type="number" min="0" step="1" placeholder="Цена до"/>
+        <select id="sort"><option value="new">Сначала новые</option><option value="price">По цене</option><option value="time">По времени окончания</option><option value="dist">По расстоянию</option></select>
+        <label class="fav-only"><input type="checkbox" id="onlyFav"/> Только избранные рестораны</label>
+        <label class="radius"><span>Радиус:</span> <input id="radius" type="number" min="0" step="1" value="5"/> км</label>
+        <button id="geoBtn" class="btn">📍 Моя геолокация</button>
+      </div>
+      <div class="muted small" id="geoState">Геолокация: не определена</div>
+    </section>
+
+    <section class="card">
+      <div id="empty" class="empty hidden"><div class="empty-emoji">🔎</div><div class="empty-title">Ничего не найдено</div></div>
+      <div id="offers" class="cards-grid large"></div>
+    </section>
+  </main>
+
+  <dialog id="reserveModal" class="modal">
+    <form method="dialog" id="reserveForm" class="modal-card">
+      <h3>Подтвердите бронь</h3>
+      <div id="reserveOffer" class="muted"></div>
+      <div class="field"><label>Ваше имя (необязательно)</label><input id="buyerName" placeholder="Например, Анна" /></div>
+      <div class="actions end"><button class="btn ghost" value="cancel">Отмена</button><button class="btn primary" id="reserveSubmit" value="default">Забронировать</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="okModal" class="modal">
+    <div class="modal-card">
+      <h3>Бронь создана</h3>
+      <p>Код: <b id="reserveCode"></b></p>
+      <p id="reserveUntil" class="muted"></p>
+      <div class="actions end"><button id="okClose" class="btn primary">Ок</button></div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="./buyer.js"></script>
+</body>
+</html>
