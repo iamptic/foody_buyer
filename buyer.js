@@ -36,8 +36,10 @@
     if (!arr.length) els.empty.classList.remove('hidden'); else els.empty.classList.add('hidden');
     for (const o of arr) {
       const div = document.createElement('div');
-      div.className = 'card';
+      div.className = 'card-item';
+      const img = o.photo_url ? `<div style="margin:6px 0"><img src="${o.photo_url}" alt="" style="width:100%;max-height:160px;object-fit:cover;border-radius:12px"/></div>` : '';
       div.innerHTML = `<div><b>${o.title}</b></div>
+        ${img}
         <div class="muted">${o.restaurant}</div>
         <div class="muted">До: ${fmtDT(o.expires_at)}</div>
         <div style="margin:8px 0"><b>${money(o.price)}</b> • Остаток: ${o.quantity}</div>
@@ -49,39 +51,49 @@
 
   const load = async () => {
     try { const r = await fetch(`${API}/offers`); data = await r.json(); render(); }
-    catch { els.toast.textContent='Сервер недоступен'; els.toast.classList.remove('hidden'); setTimeout(()=>els.toast.classList.add('hidden'),2000); }
+    catch { toast('Сервер недоступен'); }
   };
+
+  function toast(msg){ els.toast.textContent=msg; els.toast.classList.remove('hidden'); setTimeout(()=>els.toast.classList.add('hidden'),2000); }
 
   const openReserve = (o) => {
     currentOffer = o;
     els.reserveOffer.textContent = `${o.restaurant} • ${o.title} — ${money(o.price)}`;
     els.buyerName.value = '';
+    document.getElementById('qty').value = 1;
     els.reserveModal.showModal();
   };
 
   els.reserveForm.addEventListener('submit', async (ev) => {
     ev.preventDefault();
     if (!currentOffer) return;
+    const qty = Math.max(1, parseInt(document.getElementById('qty').value || '1', 10));
+    const buyerName = els.buyerName.value.trim() || null;
+
     try {
-      const r = await fetch(`${API}/reserve`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ offer_id: currentOffer.id, buyer_name: els.buyerName.value.trim() || null }) });
+      const r = await fetch(`${API}/reserve`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ offer_id: currentOffer.id, buyer_name: buyerName, qty })
+      });
       const data = await r.json();
       if (data.code) {
         els.reserveCode.textContent = data.code;
         els.reserveUntil.textContent = 'Действует до: ' + fmtDT(data.expires_at);
         els.reserveModal.close();
         els.okModal.showModal();
-        load();
+        await load();
       } else {
-        els.toast.textContent='Ошибка бронирования'; els.toast.classList.remove('hidden'); setTimeout(()=>els.toast.classList.add('hidden'),2000);
+        toast('Ошибка бронирования');
       }
     } catch {
-      els.toast.textContent='Ошибка сети'; els.toast.classList.remove('hidden'); setTimeout(()=>els.toast.classList.add('hidden'),2000);
+      toast('Ошибка сети');
     }
   });
 
   els.okClose.onclick = () => els.okModal.close();
   els.search.addEventListener('input', render);
   els.sort.addEventListener('change', render);
+  document.getElementById('refreshBtn2')?.addEventListener('click', load);
   els.refresh.onclick = () => load();
 
   load();
