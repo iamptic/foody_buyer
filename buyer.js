@@ -1,30 +1,29 @@
-// Buyer screen with city filter and "near me", and proper city reload
+// Buyer screen with city filter and "near me"
 (() => {
   const urlApi = new URLSearchParams(location.search).get('api');
   if (urlApi) localStorage.setItem('foody_api', urlApi);
   const API = urlApi || localStorage.getItem('foody_api') || 'http://localhost:8000';
-  const urlCity = new URLSearchParams(location.search).get('city');
 
   const els = {
     offers: document.getElementById('offers'),
     empty: document.getElementById('empty'),
     search: document.getElementById('search'),
     sort: document.getElementById('sort'),
+    refresh: document.getElementById('refreshBtn'),
     toast: document.getElementById('toast')
   };
 
   // City toolbar
   const filters = document.querySelector('.filters');
   const cityWrap = document.createElement('div'); cityWrap.style.display='flex'; cityWrap.style.gap='8px'; cityWrap.style.alignItems='center';
-  cityWrap.innerHTML = `<select id="citySelect" class="input"></select><button id="geoBtn" class="btn ghost">Рядом со мной</button><button id="refreshBtn" class="btn ghost">Обновить</button>`;
-  filters.appendChild(cityWrap);
+  cityWrap.innerHTML = `<select id="citySelect" class="input"></select><button id="geoBtn" class="btn ghost">Рядом со мной</button>`;
+  filters.prepend(cityWrap);
   const citySelect = cityWrap.querySelector('#citySelect');
   const geoBtn = cityWrap.querySelector('#geoBtn');
-  const refreshBtn = cityWrap.querySelector('#refreshBtn');
 
   const CITY_COORDS = {
     "Москва": [55.751244, 37.618423],
-    "Санкт-Петербург": [59.93863, 30.31413],
+    "Санкт‑Петербург": [59.93863, 30.31413],
     "Томск": [56.4977, 84.9744],
     "Новосибирск": [55.0415, 82.9346],
     "Екатеринбург": [56.8389, 60.6057],
@@ -36,7 +35,7 @@
     "Хабаровск": [48.4802, 135.0710]
   };
 
-  let data = [], currentCity = urlCity || null, currentOffer = null;
+  let data = [], currentCity = null, currentOffer = null;
 
   function toast(msg){ els.toast.textContent=msg; els.toast.classList.remove('hidden'); setTimeout(()=>els.toast.classList.add('hidden'),2000); }
   const money = (v) => new Intl.NumberFormat('ru-RU').format(v) + ' ₽';
@@ -51,7 +50,6 @@
       const cities = Object.keys(CITY_COORDS);
       citySelect.innerHTML = `<option value="">Все города</option>` + cities.map(c=>`<option value="${c}">${c}</option>`).join('');
     }
-    if (currentCity) citySelect.value = currentCity;
   }
 
   const render = () => {
@@ -117,7 +115,6 @@
   document.getElementById('okClose').onclick = () => document.getElementById('okModal').close();
 
   citySelect.addEventListener('change', async () => { currentCity = citySelect.value || null; await load(); });
-  refreshBtn.addEventListener('click', load);
 
   geoBtn.addEventListener('click', () => {
     if (!navigator.geolocation) return toast('Геолокация не поддерживается');
@@ -138,8 +135,11 @@
     }, ()=>toast('Не удалось получить геолокацию'));
   });
 
+  // wire
   els.search.addEventListener('input', render);
   els.sort.addEventListener('change', render);
+  document.getElementById('refreshBtn2')?.addEventListener('click', load);
+  els.refresh.onclick = () => load();
 
   (async () => { await loadCities(); await load(); })();
 })();
