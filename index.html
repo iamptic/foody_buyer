@@ -16,9 +16,6 @@
         <div class="subtitle">Предложения рядом</div>
       </div>
     </div>
-    <div class="top-actions">
-      <button id="refreshBtn2" class="btn ghost">Обновить</button>
-    </div>
   </header>
 
   <main class="container">
@@ -26,13 +23,14 @@
       <div class="list-head">
         <h3>Горячие предложения</h3>
         <div class="filters">
+          <select id="citySelect" class="input"></select>
+          <button id="geoBtn" class="btn ghost">Рядом со мной</button>
           <input id="search" class="input" placeholder="Поиск по названию или ресторану…"/>
           <select id="sort" class="input">
             <option value="new">Сначала новые</option>
             <option value="price">Сначала дешевле</option>
             <option value="time">Скоро истекают</option>
           </select>
-          <button id="refreshBtn" class="btn ghost">Обновить</button>
         </div>
       </div>
       <div id="empty" class="empty hidden">
