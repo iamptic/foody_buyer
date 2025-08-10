@@ -1,7 +1,5 @@
 (() => {
-  const urlp = new URLSearchParams(location.search);
-  const API = urlp.get('api') || 'http://localhost:8000';
-
+  const API = new URLSearchParams(location.search).get('api') || 'http://localhost:8000';
   const els = {
     offers: document.getElementById('offers'),
     empty: document.getElementById('empty'),
@@ -18,9 +16,7 @@
     okClose: document.getElementById('okClose'),
     toast: document.getElementById('toast')
   };
-
-  let data = [];
-  let currentOffer = null;
+  let data = [], currentOffer = null;
   const money = (v) => new Intl.NumberFormat('ru-RU').format(v) + ' ₽';
   const fmtDT = (s) => new Date(s).toLocaleString('ru-RU', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit' });
 
@@ -49,20 +45,20 @@
     }
   };
 
-  const load = async () => {
+  async function load(){
     try { const r = await fetch(`${API}/offers`); data = await r.json(); render(); }
     catch { toast('Сервер недоступен'); }
-  };
+  }
 
   function toast(msg){ els.toast.textContent=msg; els.toast.classList.remove('hidden'); setTimeout(()=>els.toast.classList.add('hidden'),2000); }
 
-  const openReserve = (o) => {
+  function openReserve(o){
     currentOffer = o;
     els.reserveOffer.textContent = `${o.restaurant} • ${o.title} — ${money(o.price)}`;
     els.buyerName.value = '';
     document.getElementById('qty').value = 1;
     els.reserveModal.showModal();
-  };
+  }
 
   els.reserveForm.addEventListener('submit', async (ev) => {
     ev.preventDefault();
@@ -95,6 +91,5 @@
   els.sort.addEventListener('change', render);
   document.getElementById('refreshBtn2')?.addEventListener('click', load);
   els.refresh.onclick = () => load();
-
   load();
 })();
