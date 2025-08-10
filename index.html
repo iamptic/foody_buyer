@@ -23,14 +23,13 @@
       <div class="list-head">
         <h3>Горячие предложения</h3>
         <div class="filters">
-          <select id="citySelect" class="input"></select>
-          <button id="geoBtn" class="btn ghost">Рядом со мной</button>
           <input id="search" class="input" placeholder="Поиск по названию или ресторану…"/>
           <select id="sort" class="input">
             <option value="new">Сначала новые</option>
             <option value="price">Сначала дешевле</option>
             <option value="time">Скоро истекают</option>
           </select>
+          <!-- City filter injected by JS -->
         </div>
       </div>
       <div id="empty" class="empty hidden">
@@ -40,26 +39,26 @@
       </div>
       <div id="offers" class="cards-grid"></div>
     </section>
+
+    <dialog id="reserveModal" class="modal">
+      <form method="dialog" class="modal-card" id="reserveForm">
+        <h3>Бронирование</h3>
+        <div id="reserveOffer" class="muted"></div>
+        <div class="field"><label>Количество</label><input id="qty" type="number" min="1" step="1" value="1"/></div>
+        <div class="field"><label>Имя (опционально)</label><input id="buyerName" placeholder="Как к вам обратиться"/></div>
+        <div class="actions end"><button class="btn ghost" value="cancel">Отмена</button><button class="btn primary" id="reserveSubmit" value="default">Забронировать</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="okModal" class="modal">
+      <div class="modal-card">
+        <h3>Готово!</h3>
+        <div>Ваш код: <b id="reserveCode"></b></div>
+        <div id="reserveUntil" class="muted"></div>
+        <div class="actions end" style="margin-top:12px"><button class="btn primary" id="okClose">Ок</button></div>
+      </div>
+    </dialog>
   </main>
-
-  <dialog id="reserveModal" class="modal">
-    <form method="dialog" class="modal-card" id="reserveForm">
-      <h3>Бронирование</h3>
-      <div id="reserveOffer" class="muted"></div>
-      <div class="field"><label>Количество</label><input id="qty" type="number" min="1" step="1" value="1"/></div>
-      <div class="field"><label>Имя (опционально)</label><input id="buyerName" placeholder="Как к вам обратиться"/></div>
-      <div class="actions end"><button class="btn ghost" value="cancel">Отмена</button><button class="btn primary" id="reserveSubmit" value="default">Забронировать</button></div>
-    </form>
-  </dialog>
-
-  <dialog id="okModal" class="modal">
-    <div class="modal-card">
-      <h3>Готово!</h3>
-      <div>Ваш код: <b id="reserveCode"></b></div>
-      <div id="reserveUntil" class="muted"></div>
-      <div class="actions end" style="margin-top:12px"><button class="btn primary" id="okClose">Ок</button></div>
-    </div>
-  </dialog>
 
   <div id="toast" class="toast hidden"></div>
   <script src="./buyer.js"></script>
