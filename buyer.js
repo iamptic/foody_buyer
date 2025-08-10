@@ -1,4 +1,3 @@
-// Buyer screen with city filter and "near me"
 (() => {
   const urlApi = new URLSearchParams(location.search).get('api');
   if (urlApi) localStorage.setItem('foody_api', urlApi);
@@ -9,11 +8,9 @@
     empty: document.getElementById('empty'),
     search: document.getElementById('search'),
     sort: document.getElementById('sort'),
-    refresh: document.getElementById('refreshBtn'),
     toast: document.getElementById('toast')
   };
 
-  // City toolbar
   const filters = document.querySelector('.filters');
   const cityWrap = document.createElement('div'); cityWrap.style.display='flex'; cityWrap.style.gap='8px'; cityWrap.style.alignItems='center';
   cityWrap.innerHTML = `<select id="citySelect" class="input"></select><button id="geoBtn" class="btn ghost">Рядом со мной</button>`;
@@ -35,7 +32,7 @@
     "Хабаровск": [48.4802, 135.0710]
   };
 
-  let data = [], currentCity = null, currentOffer = null;
+  let data = [], currentCity = localStorage.getItem('foody_city') || '', currentOffer = null;
 
   function toast(msg){ els.toast.textContent=msg; els.toast.classList.remove('hidden'); setTimeout(()=>els.toast.classList.add('hidden'),2000); }
   const money = (v) => new Intl.NumberFormat('ru-RU').format(v) + ' ₽';
@@ -50,6 +47,7 @@
       const cities = Object.keys(CITY_COORDS);
       citySelect.innerHTML = `<option value="">Все города</option>` + cities.map(c=>`<option value="${c}">${c}</option>`).join('');
     }
+    citySelect.value = currentCity;
   }
 
   const render = () => {
@@ -88,12 +86,9 @@
 
   function openReserve(o){
     currentOffer = o;
-    const dlg = document.getElementById('reserveModal');
-    const offerEl = document.getElementById('reserveOffer');
-    const buyerName = document.getElementById('buyerName');
-    offerEl.textContent = `${o.restaurant} • ${o.title} — ${money(o.price)}`;
-    buyerName.value=''; document.getElementById('qty').value=1;
-    dlg.showModal();
+    document.getElementById('reserveOffer').textContent = `${o.restaurant} • ${o.title} — ${money(o.price)}`;
+    document.getElementById('buyerName').value=''; document.getElementById('qty').value=1;
+    document.getElementById('reserveModal').showModal();
   }
 
   document.getElementById('reserveForm').addEventListener('submit', async (ev)=>{
@@ -114,7 +109,11 @@
   });
   document.getElementById('okClose').onclick = () => document.getElementById('okModal').close();
 
-  citySelect.addEventListener('change', async () => { currentCity = citySelect.value || null; await load(); });
+  citySelect.addEventListener('change', async () => {
+    currentCity = citySelect.value || '';
+    localStorage.setItem('foody_city', currentCity);
+    await load();
+  });
 
   geoBtn.addEventListener('click', () => {
     if (!navigator.geolocation) return toast('Геолокация не поддерживается');
@@ -127,6 +126,7 @@
       }
       if (best){
         currentCity = best;
+        localStorage.setItem('foody_city', currentCity);
         citySelect.value = best;
         load();
       } else {
@@ -135,11 +135,8 @@
     }, ()=>toast('Не удалось получить геолокацию'));
   });
 
-  // wire
   els.search.addEventListener('input', render);
   els.sort.addEventListener('change', render);
-  document.getElementById('refreshBtn2')?.addEventListener('click', load);
-  els.refresh.onclick = () => load();
 
   (async () => { await loadCities(); await load(); })();
 })();
