@@ -28,7 +28,7 @@
     const q = (els.search.value || '').toLowerCase();
     const sort = els.sort.value;
     let arr = data.slice();
-    if (q) arr = arr.filter(o => o.title.toLowerCase().includes(q) || (o.restaurant||'').toLowerCase().includes(q));
+    if (q) arr = arr.filter(o => (o.title||'').toLowerCase().includes(q) || (o.restaurant||'').toLowerCase().includes(q));
     if (sort === 'price') arr.sort((a,b)=> a.price - b.price);
     else if (sort === 'time') arr.sort((a,b)=> new Date(a.expires_at) - new Date(b.expires_at));
     else arr.sort((a,b)=> b.id - a.id);

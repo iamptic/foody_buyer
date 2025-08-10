@@ -1,1 +1,63 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Foody — Предложения рядом</title><link rel="stylesheet" href="./styles.css"/><script src="https://telegram.org/js/telegram-web-app.js"></script></head><body class="light"><header class="topbar"><div class="brand"><div class="logo">🥡</div><div class="title"><div class="name">Foody</div><div class="subtitle">Предложения рядом</div></div></div><div class="top-actions"><button id="refreshBtn" class="btn ghost">Обновить</button></div></header><main class="container"><section class="card"><div class="list-head"><h3>Горячие предложения</h3><div class="filters"><input id="search" class="input" placeholder="Поиск…"/><select id="sort" class="input"><option value="new">Сначала новые</option><option value="price">Дешевле</option><option value="time">Раньше заканчиваются</option></select></div></div><div id="empty" class="empty hidden"><div class="empty-emoji">🍽️</div><div class="empty-title">Пока пусто</div></div><div id="offers" class="cards-grid"></div></section><dialog id="reserveModal" class="modal"><form id="reserveForm" method="dialog" class="modal-card"><h3>Бронь</h3><div id="reserveOffer" class="muted"></div><div class="field"><label>Имя (необязательно)</label><input id="buyerName"/></div><div class="actions end"><button class="btn ghost" value="cancel">Отмена</button><button class="btn primary" value="default">Забронировать</button></div></form></dialog><dialog id="okModal" class="modal"><div class="modal-card"><h3>Готово</h3><div>Код брони: <b id="reserveCode"></b></div><div id="reserveUntil" class="muted"></div><div class="actions end"><button id="okClose" class="btn primary">Ок</button></div></div></dialog></main><div id="toast" class="toast hidden"></div><script src="./buyer.js"></script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foody — Предложения рядом</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body class="light">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🥡</div>
+      <div>
+        <div class="name">Foody</div>
+        <div class="subtitle">Предложения рядом</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="refreshBtn" class="btn ghost">Обновить</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="list-head">
+        <h3>Горячие предложения</h3>
+        <div class="filters">
+          <input id="search" class="input" placeholder="Поиск…" />
+          <select id="sort" class="input">
+            <option value="latest">Сначала новые</option>
+            <option value="price">По цене</option>
+            <option value="time">Скоро истекают</option>
+          </select>
+        </div>
+      </div>
+      <div id="empty" class="empty hidden"><div class="empty-emoji">📭</div><div class="empty-title">Ничего не найдено</div></div>
+      <div id="offers" class="cards-grid"></div>
+    </section>
+
+    <dialog id="reserveModal" class="modal">
+      <form class="modal-card" id="reserveForm" method="dialog">
+        <h3>Бронирование</h3>
+        <div id="reserveOffer" class="muted"></div>
+        <div class="field"><label>Ваше имя (необязательно)</label><input id="buyerName" /></div>
+        <div class="actions end"><button class="btn ghost" value="cancel">Отмена</button><button class="btn primary" value="default">Забронировать</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="okModal" class="modal">
+      <div class="modal-card">
+        <h3>Готово!</h3>
+        <div>Код брони: <b id="reserveCode"></b></div>
+        <div id="reserveUntil" class="muted"></div>
+        <div class="actions end" style="margin-top:12px"><button id="okClose" class="btn primary">Понятно</button></div>
+      </div>
+    </dialog>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="./buyer.js"></script>
+</body>
+</html>
